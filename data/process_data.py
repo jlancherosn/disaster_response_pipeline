@@ -33,6 +33,8 @@ def clean_data(df):
     for column in categories: 
         categories[column] = categories[column].apply(lambda x: x[-1]).astype(int)
         
+    categories = categories[categories['related'] != 2]
+        
     df.drop(columns='categories', inplace=True)
     df = pd.concat([df, categories], axis=1)
     df.drop_duplicates(inplace=True)
@@ -48,7 +50,7 @@ def save_data(df, database_filename):
     This function saves as database the cleaned DataFrame in the given filepath
     '''
     engine = create_engine(f'sqlite:///{database_filename}')
-    df.to_sql('InsertTableName', engine, index=False)
+    df.to_sql('InsertTableName', engine, index=False, if_exists='replace')
 
 def main(): 
     
